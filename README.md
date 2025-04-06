@@ -110,3 +110,8 @@ waiting for all k8s nodes to report schedulable: OK
 
 Check the health of the node/nodes
 ![](photos/talosctl_dashboard.png)
+
+If you need to start over you can always taint things and terraform apply again
+```
+terraform state list | xargs -n1 terraform taint
+```

@@ -1,20 +1,16 @@
-# This is how the whole setup is structured:
-# - **main.tf**: This file contains the main configuration for managing the Talos cluster on Proxmox, including provider definitions, resource configurations, and data blocks for retrieving machine configurations.
-# - **providers.tf**: This file defines the required providers for the Terraform configuration, specifying the source and version for each provider.
-# - **variables.tf**: This file defines the variables used in the Terraform configuration, allowing for customization of the cluster name, IP addresses, and other settings.
-# - **virtual_machines.tf**: This file defines the virtual machines to be created in the Proxmox virtual environment, specifying their configurations such as CPU, memory, disk, and network settings.
-# - **cluster.tf**: This file contains the configuration for the Talos cluster, including the creation of machine secrets, retrieval of machine configurations, application of configurations to control plane and worker nodes, bootstrapping the control plane, and retrieving the health status and kubeconfig for the cluster.
-# This resource creates a new Talos machine secrets resource. 
+# Talos Cluster Configuration on Proxmox
+
+# Talos Machine Secrets
 resource "talos_machine_secrets" "machine_secrets" {}
 
-# This data block retrieves the client configuration for the Talos cluster.
+# Talos Client Configuration
 data "talos_client_configuration" "talosconfig" {
   cluster_name         = var.cluster_name
   client_configuration = talos_machine_secrets.machine_secrets.client_configuration
   endpoints            = [var.talos_cp_01_ip_addr]
 }
 
-# This data block retrieves the machine configuration for the "cp_01" node from the Talos provider.
+# Control Plane Machine Configurations
 data "talos_machine_configuration" "machineconfig_cp" {
   cluster_name     = var.cluster_name
   cluster_endpoint = "https://${var.talos_cp_01_ip_addr}:6443"
@@ -22,7 +18,6 @@ data "talos_machine_configuration" "machineconfig_cp" {
   machine_secrets  = talos_machine_secrets.machine_secrets.machine_secrets
 }
 
-# This data block retrieves the machine configuration for the "cp_02" node from the Talos provider.
 data "talos_machine_configuration" "machineconfig_cp_02" {
   cluster_name     = var.cluster_name
   cluster_endpoint = "https://${var.talos_cp_02_ip_addr}:6443"
@@ -30,7 +25,6 @@ data "talos_machine_configuration" "machineconfig_cp_02" {
   machine_secrets  = talos_machine_secrets.machine_secrets.machine_secrets
 }
 
-# This data block retrieves the machine configuration for the "cp_03" node from the Talos provider.
 data "talos_machine_configuration" "machineconfig_cp_03" {
   cluster_name     = var.cluster_name
   cluster_endpoint = "https://${var.talos_cp_03_ip_addr}:6443"
@@ -38,34 +32,29 @@ data "talos_machine_configuration" "machineconfig_cp_03" {
   machine_secrets  = talos_machine_secrets.machine_secrets.machine_secrets
 }
 
-# This resource applies the machine configuration for the "cp_01" node.
+# Apply Control Plane Configurations
 resource "talos_machine_configuration_apply" "cp_config_apply" {
-  depends_on                  = [ proxmox_virtual_environment_vm.talos_cp_01 ]
+  depends_on                  = [proxmox_virtual_environment_vm.talos_cp_01]
   client_configuration        = talos_machine_secrets.machine_secrets.client_configuration
   machine_configuration_input = data.talos_machine_configuration.machineconfig_cp.machine_configuration
-  count                       = 1
   node                        = var.talos_cp_01_ip_addr
 }
 
-# This resource applies the machine configuration for the "cp_02" node.
 resource "talos_machine_configuration_apply" "cp_config_apply_02" {
-  depends_on                  = [ proxmox_virtual_environment_vm.talos_cp_02 ]
+  depends_on                  = [proxmox_virtual_environment_vm.talos_cp_02]
   client_configuration        = talos_machine_secrets.machine_secrets.client_configuration
   machine_configuration_input = data.talos_machine_configuration.machineconfig_cp_02.machine_configuration
-  count                       = 1
   node                        = var.talos_cp_02_ip_addr
 }
 
-# This resource applies the machine configuration for the "cp_03" node.
 resource "talos_machine_configuration_apply" "cp_config_apply_03" {
-  depends_on                  = [ proxmox_virtual_environment_vm.talos_cp_03 ]
+  depends_on                  = [proxmox_virtual_environment_vm.talos_cp_03]
   client_configuration        = talos_machine_secrets.machine_secrets.client_configuration
   machine_configuration_input = data.talos_machine_configuration.machineconfig_cp_03.machine_configuration
-  count                       = 1
   node                        = var.talos_cp_03_ip_addr
 }
 
-# This data block retrieves the machine configuration for the "worker" nodes from the Talos provider.
+# Worker Machine Configurations
 data "talos_machine_configuration" "machineconfig_worker" {
   cluster_name     = var.cluster_name
   cluster_endpoint = "https://${var.talos_cp_01_ip_addr}:6443"
@@ -73,7 +62,6 @@ data "talos_machine_configuration" "machineconfig_worker" {
   machine_secrets  = talos_machine_secrets.machine_secrets.machine_secrets
 }
 
-# This data block retrieves the machine configuration for the "worker_02" node from the Talos provider.
 data "talos_machine_configuration" "machineconfig_worker_02" {
   cluster_name     = var.cluster_name
   cluster_endpoint = "https://${var.talos_cp_02_ip_addr}:6443"
@@ -81,7 +69,6 @@ data "talos_machine_configuration" "machineconfig_worker_02" {
   machine_secrets  = talos_machine_secrets.machine_secrets.machine_secrets
 }
 
-# This data block retrieves the machine configuration for the "worker_03" node from the Talos provider.
 data "talos_machine_configuration" "machineconfig_worker_03" {
   cluster_name     = var.cluster_name
   cluster_endpoint = "https://${var.talos_cp_03_ip_addr}:6443"
@@ -89,43 +76,38 @@ data "talos_machine_configuration" "machineconfig_worker_03" {
   machine_secrets  = talos_machine_secrets.machine_secrets.machine_secrets
 }
 
-# This resource applies the machine configuration for the "worker_01" node.
+# Apply Worker Configurations
 resource "talos_machine_configuration_apply" "worker_config_apply" {
-  depends_on                  = [ proxmox_virtual_environment_vm.talos_worker_01 ]
+  depends_on                  = [proxmox_virtual_environment_vm.talos_worker_01]
   client_configuration        = talos_machine_secrets.machine_secrets.client_configuration
   machine_configuration_input = data.talos_machine_configuration.machineconfig_worker.machine_configuration
-  count                       = 1
   node                        = var.talos_worker_01_ip_addr
 }
 
-# This resource applies the machine configuration for the "worker_02" node.
 resource "talos_machine_configuration_apply" "worker_config_apply_02" {
-  depends_on                  = [ proxmox_virtual_environment_vm.talos_worker_02 ]
+  depends_on                  = [proxmox_virtual_environment_vm.talos_worker_02]
   client_configuration        = talos_machine_secrets.machine_secrets.client_configuration
   machine_configuration_input = data.talos_machine_configuration.machineconfig_worker_02.machine_configuration
-  count                       = 1
   node                        = var.talos_worker_02_ip_addr
 }
 
-# This resource applies the machine configuration for the "worker_03" node.
 resource "talos_machine_configuration_apply" "worker_config_apply_03" {
-  depends_on                  = [ proxmox_virtual_environment_vm.talos_worker_03 ]
+  depends_on                  = [proxmox_virtual_environment_vm.talos_worker_03]
   client_configuration        = talos_machine_secrets.machine_secrets.client_configuration
   machine_configuration_input = data.talos_machine_configuration.machineconfig_worker_03.machine_configuration
-  count                       = 1
   node                        = var.talos_worker_03_ip_addr
 }
 
-# This resource bootstraps the Talos control plane node.
+# Bootstrap Control Plane
 resource "talos_machine_bootstrap" "bootstrap" {
-  depends_on           = [ talos_machine_configuration_apply.cp_config_apply ]
+  depends_on           = [talos_machine_configuration_apply.cp_config_apply]
   client_configuration = talos_machine_secrets.machine_secrets.client_configuration
   node                 = var.talos_cp_01_ip_addr
 }
 
-# This data block retrieves the health status of the Talos cluster.
+# Cluster Health Check
 data "talos_cluster_health" "health" {
-  depends_on           = [
+  depends_on = [
     talos_machine_configuration_apply.cp_config_apply,
     talos_machine_configuration_apply.cp_config_apply_02,
     talos_machine_configuration_apply.cp_config_apply_03,
@@ -147,61 +129,44 @@ data "talos_cluster_health" "health" {
   endpoints            = data.talos_client_configuration.talosconfig.endpoints
 }
 
-# This data block retrieves the kubeconfig for the Talos cluster.
+# Retrieve Kubeconfig
 resource "talos_cluster_kubeconfig" "kubeconfig" {
-  depends_on           = [ talos_machine_bootstrap.bootstrap, data.talos_cluster_health.health ]
+  depends_on           = [talos_machine_bootstrap.bootstrap, data.talos_cluster_health.health]
   client_configuration = talos_machine_secrets.machine_secrets.client_configuration
   node                 = var.talos_cp_01_ip_addr
 }
 
-# Output the Talos configuration and kubeconfig.
+# Outputs
 output "talosconfig" {
   value     = data.talos_client_configuration.talosconfig.talos_config
   sensitive = true
 }
 
-# Output the kubeconfig for the Talos cluster.
 output "kubeconfig" {
   value     = talos_cluster_kubeconfig.kubeconfig.kubeconfig_raw
   sensitive = true
 }
 
-# Run custom script for further configuration.
+# Custom Script for Configuration
 resource "null_resource" "run_custom_script" {
   provisioner "local-exec" {
-    command = "mkdir -p ~/.kube && mkdir -p ~/.talos && terraform output -raw kubeconfig > ~/.kube/config && terraform output -raw talosconfig > ~/.talos/config && chmod 600 ~/.kube/config ~/.talos/config"
+    command = <<EOT
+      mkdir -p ~/.kube ~/.talos
+      terraform output -raw kubeconfig > ~/.kube/config
+      terraform output -raw talosconfig > ~/.talos/config
+      chmod 600 ~/.kube/config ~/.talos/config
+    EOT
   }
+
   triggers = {
-    kubeconfig = talos_cluster_kubeconfig.kubeconfig.kubeconfig_raw
+    kubeconfig  = talos_cluster_kubeconfig.kubeconfig.kubeconfig_raw
     talosconfig = data.talos_client_configuration.talosconfig.talos_config
-    timestamp = timestamp() # Ensure the resource always detects changes
+    timestamp   = timestamp() # Ensure the resource always detects changes
   }
+
   depends_on = [
     talos_cluster_kubeconfig.kubeconfig,
     data.talos_client_configuration.talosconfig,
     data.talos_cluster_health.health
   ]
 }
-
-# # Run custom script for further configuration.
-# resource "null_resource" "run_custom_script" {
-#   provisioner "local-exec" {
-#     command = <<EOT
-#       mkdir -p ~/.kube && mkdir -p ~/.talos
-#       terraform output -raw kubeconfig > ~/.kube/config
-#       terraform output -raw talosconfig > ~/.talos/config
-#       chmod 600 ~/.kube/config ~/.talos/config
-#     EOT
-#   }
-#   triggers = {
-#     kubeconfig = try(talos_cluster_kubeconfig.kubeconfig.kubeconfig_raw, "")
-#     talosconfig = try(data.talos_client_configuration.talosconfig.talos_config, "")
-#   }
-#   depends_on = [
-#     talos_cluster_kubeconfig.kubeconfig,
-#     data.talos_client_configuration.talosconfig,
-#     data.talos_cluster_health.health
-#   ]
-# }
-
-

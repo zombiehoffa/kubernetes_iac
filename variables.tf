@@ -1,4 +1,5 @@
 # This file defines the variables used in the Terraform configuration.
+
 variable "cluster_name" {
   type    = string
   default = "kubernetes_cluster"
@@ -40,7 +41,7 @@ variable "talos_worker_03_ip_addr" {
 }
 
 variable "proxmox_password" {
-  type      = string
-  sensitive = true
+  type        = string
+  sensitive   = true
   description = "Password for Proxmox API access"
 }

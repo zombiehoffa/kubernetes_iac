@@ -162,7 +162,7 @@ output "talosconfig" {
 
 # Output the kubeconfig for the Talos cluster.
 output "kubeconfig" {
-  value     = data.talos_cluster_kubeconfig.kubeconfig.kubeconfig_raw
+  value     = talos_cluster_kubeconfig.kubeconfig.kubeconfig_raw
   sensitive = true
 }
 

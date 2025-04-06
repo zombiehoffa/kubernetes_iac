@@ -166,15 +166,16 @@ output "kubeconfig" {
   sensitive = true
 }
 
-# # Run custom script for further configuration.
-# resource "null_resource" "run_custom_script" {
-#   provisioner "local-exec" {
-#     command = "terraform output -raw kubeconfig > ~/.kube/config && terraform output -raw talosconfig > ~/.talos/config && chmod 600 ~/.kube/config && chmod 600 ~/.talos/config"
-#   }
-#   depends_on = [
-#     data.talos_cluster_kubeconfig.kubeconfig,
-#     data.talos_client_configuration.talosconfig
-#   ]
-# }
+# Run custom script for further configuration.
+resource "null_resource" "run_custom_script" {
+  provisioner "local-exec" {
+    command = "terraform output -raw kubeconfig > ~/.kube/config && terraform output -raw talosconfig > ~/.talos/config && chmod 600 ~/.kube/config && chmod 600 ~/.talos/config"
+  }
+  depends_on = [
+    data.talos_cluster_kubeconfig.kubeconfig,
+    data.talos_client_configuration.talosconfig,
+    resource_name_for_health_check
+  ]
+}
 
 

@@ -170,7 +170,7 @@ output "kubeconfig" {
 resource "null_resource" "run_custom_script" {
   provisioner "local-exec" {
     command = <<EOT
-      mkdir ~/.kube ~/.talos
+      mkdir ~/.kube && mkdir ~/.talos
       echo "$(terraform output -raw kubeconfig)" > ~/.kube/config
       echo "$(terraform output -raw talosconfig)" > ~/.talos/config
       chmod 600 ~/.kube/config ~/.talos/config

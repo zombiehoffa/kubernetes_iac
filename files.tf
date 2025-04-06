@@ -17,6 +17,5 @@ resource "proxmox_virtual_environment_download_file" "talos_nocloud_image" {
 
   lifecycle {
     create_before_destroy = false
-    prevent_destroy       = true
   }
 }

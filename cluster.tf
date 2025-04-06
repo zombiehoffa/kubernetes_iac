@@ -166,18 +166,17 @@ output "kubeconfig" {
   sensitive = true
 }
 
-# Run custom script for further configuration.
 resource "null_resource" "run_custom_script" {
   provisioner "local-exec" {
     command = <<EOT
-      mkdir ~/.kube && mkdir ~/.talos
-      echo "$(terraform output -raw kubeconfig)" > ~/.kube/config
-      echo "$(terraform output -raw talosconfig)" > ~/.talos/config
-      chmod 600 ~/.kube/config ~/.talos/config
+    mkdir -p ~/.kube ~/.talos
+    terraform output -raw kubeconfig > ~/.kube/config
+    terraform output -raw talosconfig > ~/.talos/config
+    chmod 600 ~/.kube/config ~/.talos/config
     EOT
   }
   triggers = {
-    kubeconfig = talos_cluster_kubeconfig.kubeconfig.kubeconfig_raw
+    kubeconfig  = talos_cluster_kubeconfig.kubeconfig.kubeconfig_raw
     talosconfig = data.talos_client_configuration.talosconfig.talos_config
   }
   depends_on = [

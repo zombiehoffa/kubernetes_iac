@@ -174,7 +174,7 @@ resource "null_resource" "run_custom_script" {
   depends_on = [
     talos_cluster_kubeconfig.kubeconfig,
     data.talos_client_configuration.talosconfig,
-    resource_name_for_health_check
+    data.talos_cluster_health.health
   ]
 }
 

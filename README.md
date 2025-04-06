@@ -36,13 +36,13 @@ kubectl get nodes
 
 Sample output:
 ```
-NAME              STATUS   ROLES           AGE     VERSION
-talos-cp-01       Ready    control-plane   3h39m   v1.30.0
-talos-cp-02       Ready    control-plane   3h24m   v1.30.0
-talos-cp-03       Ready    control-plane   3h24m   v1.30.0
-talos-worker-01   Ready    <none>          3h39m   v1.30.0
-talos-worker-02   Ready    <none>          3h24m   v1.30.0
-talos-worker-03   Ready    <none>          3h24m   v1.30.0
+NAME              STATUS   ROLES           AGE   VERSION
+talos-cp-01       Ready    control-plane   83s   v1.32.0
+talos-cp-02       Ready    control-plane   86s   v1.32.0
+talos-cp-03       Ready    control-plane   85s   v1.32.0
+talos-worker-01   Ready    <none>          88s   v1.32.0
+talos-worker-02   Ready    <none>          86s   v1.32.0
+talos-worker-03   Ready    <none>          90s   v1.32.0
 ```
 
 ### Use `talosctl`

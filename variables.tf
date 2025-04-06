@@ -38,3 +38,9 @@ variable "talos_worker_03_ip_addr" {
   type    = string
   default = "10.0.0.75"
 }
+
+variable "proxmox_password" {
+  type      = string
+  sensitive = true
+  description = "Password for Proxmox API access"
+}

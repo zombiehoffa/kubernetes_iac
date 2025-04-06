@@ -169,7 +169,7 @@ output "kubeconfig" {
 # Run custom script for further configuration.
 resource "null_resource" "run_custom_script" {
   provisioner "local-exec" {
-    command = "mkdir ~/.kube && mkdir ~/.talos && terraform output -raw kubeconfig > ~/.kube/config && terraform output -raw talosconfig > ~/.talos/config && chmod 600 ~/.kube/config ~/.talos/config"
+    command = "mkdir -p ~/.kube && mkdir -p ~/.talos && terraform output -raw kubeconfig > ~/.kube/config && terraform output -raw talosconfig > ~/.talos/config && chmod 600 ~/.kube/config ~/.talos/config"
   }
   triggers = {
     kubeconfig = talos_cluster_kubeconfig.kubeconfig.kubeconfig_raw

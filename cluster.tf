@@ -148,7 +148,7 @@ data "talos_cluster_health" "health" {
 }
 
 # This data block retrieves the kubeconfig for the Talos cluster.
-data "talos_cluster_kubeconfig" "kubeconfig" {
+resource "talos_cluster_kubeconfig" "kubeconfig" {
   depends_on           = [ talos_machine_bootstrap.bootstrap, data.talos_cluster_health.health ]
   client_configuration = talos_machine_secrets.machine_secrets.client_configuration
   node                 = var.talos_cp_01_ip_addr

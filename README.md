@@ -55,6 +55,9 @@ Get the list of nodes
 
 ```
 kubectl get nodes
+```
+
+```
 NAME              STATUS   ROLES           AGE     VERSION
 talos-cp-01       Ready    control-plane   3h39m   v1.30.0
 talos-cp-02       Ready    control-plane   3h24m   v1.30.0

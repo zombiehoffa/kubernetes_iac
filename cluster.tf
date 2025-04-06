@@ -183,4 +183,25 @@ resource "null_resource" "run_custom_script" {
   ]
 }
 
+# # Run custom script for further configuration.
+# resource "null_resource" "run_custom_script" {
+#   provisioner "local-exec" {
+#     command = <<EOT
+#       mkdir -p ~/.kube && mkdir -p ~/.talos
+#       terraform output -raw kubeconfig > ~/.kube/config
+#       terraform output -raw talosconfig > ~/.talos/config
+#       chmod 600 ~/.kube/config ~/.talos/config
+#     EOT
+#   }
+#   triggers = {
+#     kubeconfig = try(talos_cluster_kubeconfig.kubeconfig.kubeconfig_raw, "")
+#     talosconfig = try(data.talos_client_configuration.talosconfig.talos_config, "")
+#   }
+#   depends_on = [
+#     talos_cluster_kubeconfig.kubeconfig,
+#     data.talos_client_configuration.talosconfig,
+#     data.talos_cluster_health.health
+#   ]
+# }
+
 

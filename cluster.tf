@@ -171,6 +171,10 @@ resource "null_resource" "run_custom_script" {
   provisioner "local-exec" {
     command = "mkdir -p ~/.kube ~/.talos && terraform output -raw kubeconfig > ~/.kube/config && terraform output -raw talosconfig > ~/.talos/config && chmod 600 ~/.kube/config ~/.talos/config"
   }
+  triggers = {
+    kubeconfig = talos_cluster_kubeconfig.kubeconfig.kubeconfig_raw
+    talosconfig = data.talos_client_configuration.talosconfig.talos_config
+  }
   depends_on = [
     talos_cluster_kubeconfig.kubeconfig,
     data.talos_client_configuration.talosconfig,

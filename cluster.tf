@@ -38,6 +38,9 @@ resource "talos_machine_configuration_apply" "cp_config_apply" {
   client_configuration        = talos_machine_secrets.machine_secrets.client_configuration
   machine_configuration_input = data.talos_machine_configuration.machineconfig_cp.machine_configuration
   node                        = var.talos_cp_01_ip_addr
+  config_patches = [
+    templatefile("./templates/cpnetwork.yaml.tmpl", {cpip = var.cp_vip})
+  ]
 }
 
 resource "talos_machine_configuration_apply" "cp_config_apply_02" {
@@ -45,6 +48,9 @@ resource "talos_machine_configuration_apply" "cp_config_apply_02" {
   client_configuration        = talos_machine_secrets.machine_secrets.client_configuration
   machine_configuration_input = data.talos_machine_configuration.machineconfig_cp_02.machine_configuration
   node                        = var.talos_cp_02_ip_addr
+  config_patches = [
+    templatefile("./templates/cpnetwork.yaml.tmpl", {cpip = var.cp_vip})
+  ]
 }
 
 resource "talos_machine_configuration_apply" "cp_config_apply_03" {
@@ -52,6 +58,9 @@ resource "talos_machine_configuration_apply" "cp_config_apply_03" {
   client_configuration        = talos_machine_secrets.machine_secrets.client_configuration
   machine_configuration_input = data.talos_machine_configuration.machineconfig_cp_03.machine_configuration
   node                        = var.talos_cp_03_ip_addr
+  config_patches = [
+    templatefile("./templates/cpnetwork.yaml.tmpl", {cpip = var.cp_vip})
+  ]
 }
 
 # Worker Machine Configurations

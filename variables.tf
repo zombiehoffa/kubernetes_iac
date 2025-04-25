@@ -45,3 +45,7 @@ variable "proxmox_password" {
   sensitive   = true
   description = "Password for Proxmox API access"
 }
+variable "cp_vip" {
+  type    = string
+  default = "192.168.3.180"
+}

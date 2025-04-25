@@ -12,27 +12,27 @@ data "talos_client_configuration" "talosconfig" {
 
 # Control Plane Machine Configurations
 data "talos_machine_configuration" "machineconfig_cp" {
-  cluster_name        = var.cluster_name
-  cluster_endpoint    = "https://${var.talos_cp_01_ip_addr}:6443"
-  machine_type        = "controlplane"
-  machine_secrets     = talos_machine_secrets.machine_secrets.machine_secrets
-  kubernetes_version  = var.kubernetes_version
+  cluster_name       = var.cluster_name
+  cluster_endpoint   = "https://${var.talos_cp_01_ip_addr}:6443"
+  machine_type       = "controlplane"
+  machine_secrets    = talos_machine_secrets.machine_secrets.machine_secrets
+  kubernetes_version = var.kubernetes_version
 }
 
 data "talos_machine_configuration" "machineconfig_cp_02" {
-  cluster_name        = var.cluster_name
-  cluster_endpoint    = "https://${var.talos_cp_02_ip_addr}:6443"
-  machine_type        = "controlplane"
-  machine_secrets     = talos_machine_secrets.machine_secrets.machine_secrets
-  kubernetes_version  = var.kubernetes_version
+  cluster_name       = var.cluster_name
+  cluster_endpoint   = "https://${var.talos_cp_02_ip_addr}:6443"
+  machine_type       = "controlplane"
+  machine_secrets    = talos_machine_secrets.machine_secrets.machine_secrets
+  kubernetes_version = var.kubernetes_version
 }
 
 data "talos_machine_configuration" "machineconfig_cp_03" {
-  cluster_name        = var.cluster_name
-  cluster_endpoint    = "https://${var.talos_cp_03_ip_addr}:6443"
-  machine_type        = "controlplane"
-  machine_secrets     = talos_machine_secrets.machine_secrets.machine_secrets
-  kubernetes_version  = var.kubernetes_version
+  cluster_name       = var.cluster_name
+  cluster_endpoint   = "https://${var.talos_cp_03_ip_addr}:6443"
+  machine_type       = "controlplane"
+  machine_secrets    = talos_machine_secrets.machine_secrets.machine_secrets
+  kubernetes_version = var.kubernetes_version
 }
 
 # Apply Control Plane Configurations
@@ -42,7 +42,7 @@ resource "talos_machine_configuration_apply" "cp_config_apply" {
   machine_configuration_input = data.talos_machine_configuration.machineconfig_cp.machine_configuration
   node                        = var.talos_cp_01_ip_addr
   config_patches = [
-    templatefile("./templates/cpnetwork.yaml.tmpl", {cpip = var.cp_vip})
+    templatefile("./templates/cpnetwork.yaml.tmpl", { cpip = var.cp_vip })
   ]
 }
 
@@ -52,7 +52,7 @@ resource "talos_machine_configuration_apply" "cp_config_apply_02" {
   machine_configuration_input = data.talos_machine_configuration.machineconfig_cp_02.machine_configuration
   node                        = var.talos_cp_02_ip_addr
   config_patches = [
-    templatefile("./templates/cpnetwork.yaml.tmpl", {cpip = var.cp_vip})
+    templatefile("./templates/cpnetwork.yaml.tmpl", { cpip = var.cp_vip })
   ]
 }
 
@@ -62,7 +62,7 @@ resource "talos_machine_configuration_apply" "cp_config_apply_03" {
   machine_configuration_input = data.talos_machine_configuration.machineconfig_cp_03.machine_configuration
   node                        = var.talos_cp_03_ip_addr
   config_patches = [
-    templatefile("./templates/cpnetwork.yaml.tmpl", {cpip = var.cp_vip})
+    templatefile("./templates/cpnetwork.yaml.tmpl", { cpip = var.cp_vip })
   ]
 }
 
@@ -128,17 +128,17 @@ data "talos_cluster_health" "health" {
     talos_machine_configuration_apply.worker_config_apply_03
   ]
   client_configuration = data.talos_client_configuration.talosconfig.client_configuration
-  control_plane_nodes  = [
+  control_plane_nodes = [
     var.talos_cp_01_ip_addr,
     var.talos_cp_02_ip_addr,
     var.talos_cp_03_ip_addr
   ]
-  worker_nodes         = [
+  worker_nodes = [
     var.talos_worker_01_ip_addr,
     var.talos_worker_02_ip_addr,
     var.talos_worker_03_ip_addr
   ]
-  endpoints            = data.talos_client_configuration.talosconfig.endpoints
+  endpoints = data.talos_client_configuration.talosconfig.endpoints
 }
 
 # Retrieve Kubeconfig

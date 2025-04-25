@@ -1,6 +1,6 @@
 locals {
   talos = {
-    version = "v1.9.5"
+    version = var.talos_version
   }
 }
 

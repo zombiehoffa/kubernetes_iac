@@ -8,6 +8,60 @@ This repository was created by following the instructions in the article linked 
 
 ---
 
+## Project Structure & Automation
+
+### Overview
+
+This repository provides Infrastructure as Code (IaC) for deploying and managing a Kubernetes cluster on Proxmox using [Talos](https://www.talos.dev/) and [Terraform](https://www.terraform.io/). It is designed for repeatable, automated, and declarative cluster management.
+
+### Key Features
+
+- **Declarative VM Provisioning:** Proxmox VMs for control plane and worker nodes are managed via Terraform.
+- **Talos OS & Kubernetes Versioning:** Talos and Kubernetes versions are parameterized in `variables.tf` for easy upgrades.
+- **Automated Cluster Configuration:** Talos machine configurations are generated and applied automatically to each node.
+- **Rolling Upgrades:** Change a version variable and apply to safely upgrade Talos and/or Kubernetes across your cluster.
+- **CI/CD Linting:** A GitHub Actions workflow automatically checks Terraform formatting and lints code on pull requests and pushes to `main`.
+
+### How to Upgrade Talos or Kubernetes
+
+1. Edit the version variables in `variables.tf`:
+    ```hcl
+    variable "talos_version" {
+      default = "v1.9.5"
+    }
+    variable "kubernetes_version" {
+      default = "1.32.0"
+    }
+    ```
+2. Run:
+    ```bash
+    terraform apply
+    ```
+   This triggers a rolling upgrade of your cluster nodes using the new versions.
+
+### Directory Structure
+
+```
+.
+├── cluster.tf         # Talos cluster and machine configuration resources
+├── files.tf           # Talos image download and local variables
+├── providers.tf       # Terraform provider configuration
+├── variables.tf       # All input variables, including versioning
+├── virtual_machines.tf# Proxmox VM definitions for control plane and workers
+├── .github/workflows/terraform-lint.yml # CI workflow for linting
+└── README.md          # Project documentation
+```
+
+### Automation
+
+- **Terraform Linting:**  
+  On every PR or push to `main`, the `.github/workflows/terraform-lint.yml` workflow runs:
+    - `terraform fmt -check -recursive`
+    - `tflint --recursive`
+  to ensure code quality and consistency.
+
+---
+
 ## Additional Steps
 
 After setting up the cluster, you may find the following steps helpful.

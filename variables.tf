@@ -49,3 +49,13 @@ variable "cp_vip" {
   type    = string
   default = "192.168.3.180"
 }
+
+variable "talos_version" {
+  type    = string
+  default = "v1.9.5"
+}
+
+variable "kubernetes_version" {
+  type    = string
+  default = "1.32.0"
+}

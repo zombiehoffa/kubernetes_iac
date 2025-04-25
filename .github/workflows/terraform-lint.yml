@@ -1,0 +1,33 @@
+name: Terraform Lint
+
+on:
+  pull_request:
+    paths:
+      - '**/*.tf'
+  push:
+    branches:
+      - main
+
+jobs:
+  lint:
+    name: Terraform Format & Lint
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Terraform
+        uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: 1.11.4 # or whatever version you're using
+
+      - name: Terraform fmt check
+        run: terraform fmt -check -recursive
+
+      - name: Install TFLint
+        run: |
+          curl -s https://raw.githubusercontent.com/terraform-linters/tflint/master/install_linux.sh | bash
+
+      - name: Run TFLint
+        run: tflint --recursive

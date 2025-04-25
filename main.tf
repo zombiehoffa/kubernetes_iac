@@ -11,8 +11,8 @@
 # administrators.
 
 provider "proxmox" {
-  endpoint  = "https://pve:8006/"
-  username  = "root@pam"
-  password  = var.proxmox_password # Use a secure method to manage sensitive data
-  insecure  = true                 # Only needed if your Proxmox server is using a self-signed certificate
+  endpoint = "https://pve:8006/"
+  username = "root@pam"
+  password = var.proxmox_password # Use a secure method to manage sensitive data
+  insecure = true                 # Only needed if your Proxmox server is using a self-signed certificate
 }

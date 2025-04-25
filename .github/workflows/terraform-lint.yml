@@ -61,7 +61,7 @@ jobs:
       # checkov:skip=CKV_GHA_2: False positive: variables are quoted and branch names are safe in this context
       - name: Git push auto-fix
         if: ${{ github.event_name == 'pull_request' }}
-        run: git push origin HEAD:"${{ github.head_ref }}"
+        run: git push origin HEAD:'${{ github.head_ref }}' # checkov:skip=CKV_GHA_2: False positive, variable is quoted
 
       # Install tfsec
       - name: Install tfsec

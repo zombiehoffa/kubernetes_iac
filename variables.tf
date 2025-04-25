@@ -3,12 +3,12 @@
 variable "talos_nodes" {
   type = map(object({
     description : string
-    tags        : list(string)
-    node_name   : string
-    on_boot     : bool
-    cores       : number
-    memory      : number
-    ip_addr     : string
+    tags : list(string)
+    node_name : string
+    on_boot : bool
+    cores : number
+    memory : number
+    ip_addr : string
   }))
   default = {
     talos_cp_01 = {

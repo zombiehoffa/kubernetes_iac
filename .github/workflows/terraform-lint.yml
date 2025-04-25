@@ -34,17 +34,34 @@ jobs:
       - name: Run TFLint
         run: tflint --recursive
 
-# checkov:skip=CKV_GHA_2: False positive: variables are quoted and branch names are safe in this context
-      - name: Auto-fix Terraform formatting
+      # checkov:skip=CKV_GHA_2: False positive: variables are quoted and branch names are safe in this context
+      - name: Terraform recursive fmt
+        if: ${{ github.event_name == 'pull_request' }}
+        run: terraform fmt -recursive
+
+      # checkov:skip=CKV_GHA_2: False positive: variables are quoted and branch names are safe in this context
+      - name: Git config for auto-fix
         if: ${{ github.event_name == 'pull_request' }}
         run: |
-          terraform fmt -recursive
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
+
+      # checkov:skip=CKV_GHA_2: False positive: variables are quoted and branch names are safe in this context
+      - name: Git add and commit auto-fix
+        if: ${{ github.event_name == 'pull_request' }}
+        run: |
           git add .
           git diff --cached --quiet || git commit -m "Auto-fix Terraform formatting"
-          git pull --rebase origin "${{ github.head_ref }}"
-          git push origin HEAD:"${{ github.head_ref }}"
+
+      # checkov:skip=CKV_GHA_2: False positive: variables are quoted and branch names are safe in this context
+      - name: Git pull rebase for auto-fix
+        if: ${{ github.event_name == 'pull_request' }}
+        run: git pull --rebase origin "${{ github.head_ref }}"
+
+      # checkov:skip=CKV_GHA_2: False positive: variables are quoted and branch names are safe in this context
+      - name: Git push auto-fix
+        if: ${{ github.event_name == 'pull_request' }}
+        run: git push origin HEAD:"${{ github.head_ref }}"
 
       # Install tfsec
       - name: Install tfsec

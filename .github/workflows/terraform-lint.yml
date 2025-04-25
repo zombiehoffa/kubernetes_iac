@@ -54,7 +54,7 @@ jobs:
           sudo mv tfsec-linux-amd64 /usr/local/bin/tfsec
 
       - name: Run tfsec (Security Scan)
-        run: tfsec . --exit-code 1
+        run: tfsec .
 
       # Install Checkov
       - name: Install Checkov

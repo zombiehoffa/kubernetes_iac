@@ -1,4 +1,4 @@
-name: Terraform Lint
+name: Terraform Lint & Security
 
 on:
   pull_request:
@@ -10,7 +10,6 @@ on:
 
 jobs:
   lint:
-    name: Terraform Format & Lint
     runs-on: ubuntu-latest
 
     steps:
@@ -20,7 +19,7 @@ jobs:
       - name: Set up Terraform
         uses: hashicorp/setup-terraform@v3
         with:
-          terraform_version: 1.11.4 # or whatever version you're using
+          terraform_version: 1.6.6
 
       - name: Terraform fmt check
         run: terraform fmt -check -recursive
@@ -31,3 +30,28 @@ jobs:
 
       - name: Run TFLint
         run: tflint --recursive
+
+      # Auto-fix Terraform formatting
+      - name: Auto-fix Terraform formatting
+        if: ${{ github.event_name == 'pull_request' }}
+        run: |
+          terraform fmt -recursive
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git add .
+          git commit -m "Auto-fix Terraform formatting"
+          git push
+
+      # Install tfsec
+      - name: Install tfsec
+        run: curl -s https://raw.githubusercontent.com/aquasecurity/tfsec/master/scripts/install.sh | bash
+
+      - name: Run tfsec (Security Scan)
+        run: tfsec . --exit-code 1
+
+      # Install Checkov
+      - name: Install Checkov
+        run: pip install checkov
+
+      - name: Run Checkov (Security Scan)
+        run: checkov -d . --skip-check CKV_AWS_51

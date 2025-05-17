@@ -182,3 +182,11 @@ resource "null_resource" "run_custom_script" {
     data.talos_cluster_health.health
   ]
 }
+#trying to get fluxcd configured via terraform` I already have the git repo created so this just points at it and initializes
+
+
+resource "flux_bootstrap_git" "flux_system" {
+#  depends_on = [forgejo_deploy_key.this, data.talos_cluster_health.health]
+   depends_on = [data.talos_cluster_health.health]
+  path       = "clusters/${var.cluster_name}"
+}

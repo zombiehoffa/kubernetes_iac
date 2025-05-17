@@ -60,3 +60,38 @@ variable "kubernetes_version" {
   type    = string
   default = "1.32.0"
 }
+#for fluxcd
+variable "forgejo_host" {
+  description = "Forgejo hostname"
+  type        = string
+  default     = "PUTFORGEJOIPHEHERE"
+}
+
+variable "forgejo_port" {
+  description = "Forgejo port"
+  type        = number
+  default     = 23
+}
+
+variable "forgejo_org" {
+  description = "Forgejo organization"
+  type        = string
+  default     = "PUTORGNAMEHERE"
+}
+
+variable "forgejo_repository" {
+  description = "Forgejo repository"
+  type        = string
+  default     = "talosflux"
+}
+variable "forgejo_path" {
+  description = "Forgejo path"
+  type        = string
+  default     = "cluster/prod"
+}
+#uncomment below and change the default token to whatever you need to support creation of your own forgejo repo for this installation if that's what you want.
+#variable "forgejo_token" {
+#  description = "Forgejo api token"
+#  type        = string
+#  default     = "default token"
+#}

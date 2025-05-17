@@ -16,4 +16,14 @@ terraform {
       version = "~> 3.0"
     }
   }
+    flux = {
+      source = "fluxcd/flux"
+      version = "1.5.1"
+    }
+#uncomment this and figure it out if you want to deploy forgejo as part of this terraforma nd deploy flux from it.
+#    forgejo = {
+#      source  = "svalabs/forgejo"
+#      version = ">= 0.2.3"
+#    }
+  }
 }
